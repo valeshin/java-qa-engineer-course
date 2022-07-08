@@ -6,8 +6,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
-
-import java.util.Dictionary;
 import java.util.Locale;
 
 public abstract class TestCustomizer {
