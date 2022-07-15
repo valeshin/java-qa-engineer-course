@@ -1,5 +1,7 @@
 package components.popups;
 
+import com.google.inject.Inject;
+import common.GuiceScoped;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -11,8 +13,9 @@ public class CookiePopup extends AbsPopup {
     @FindBy(css = POPUP + " button")
     private WebElement acceptButton;
 
-    public CookiePopup(WebDriver driver) {
-        super(driver);
+    @Inject
+    public CookiePopup(GuiceScoped guiceScoped) {
+        super(guiceScoped);
     }
 
     public Consumer<WebElement> acceptCookie = acceptButton -> acceptButton.click();

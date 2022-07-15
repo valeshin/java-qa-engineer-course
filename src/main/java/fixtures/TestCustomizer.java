@@ -12,7 +12,7 @@ public abstract class TestCustomizer {
 
     protected EventFiringWebDriver driver;
 
-    @BeforeEach
+    /*@BeforeEach
     public void setUp() {
         driver = new DriverFactory().getDriver();
         driver.manage().window().setSize(new Dimension(1280, 1080));
@@ -23,5 +23,5 @@ public abstract class TestCustomizer {
     public void tearDown() {
         if (!System.getProperty("browser").toLowerCase(Locale.ROOT).equals("firefox")) driver.close();
         driver.quit();
-    }
+    }*/
 }

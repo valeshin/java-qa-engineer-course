@@ -1,5 +1,7 @@
 package driver;
 
+import com.google.inject.Inject;
+import common.GuiceScoped;
 import driver.drivers.ChromeWebDriver;
 import driver.drivers.FirefoxWebDriver;
 import driver.drivers.OperaWebDriver;
@@ -9,13 +11,18 @@ import java.util.Locale;
 
 public class DriverFactory {
 
-    private String browserType = System.getProperty("browser").toLowerCase(Locale.ROOT);
+    public GuiceScoped guiceScoped;
+
+    @Inject
+    public DriverFactory(GuiceScoped guiceScoped) {
+        this.guiceScoped = guiceScoped;
+    }
 
     public EventFiringWebDriver getDriver() {
-        switch (this.browserType) {
-            case "chrome": return new EventFiringWebDriver(new ChromeWebDriver().newDriver());
-            case "firefox": return new EventFiringWebDriver(new FirefoxWebDriver().newDriver());
-            case "opera": return new EventFiringWebDriver(new OperaWebDriver().newDriver());
+        switch (guiceScoped.browserName) {
+            case CHROME: return new EventFiringWebDriver(new ChromeWebDriver().newDriver());
+            case FIREFOX: return new EventFiringWebDriver(new FirefoxWebDriver().newDriver());
+            case OPERA: return new EventFiringWebDriver(new OperaWebDriver().newDriver());
             default: return null;
         }
     }

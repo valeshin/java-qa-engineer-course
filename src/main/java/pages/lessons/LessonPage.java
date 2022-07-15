@@ -1,11 +1,14 @@
-package pages;
+package pages.lessons;
 
-import org.openqa.selenium.WebDriver;
+import com.google.inject.Inject;
+import common.GuiceScoped;
+import pages.BasePage;
 
 public abstract class LessonPage extends BasePage<LessonPage> {
 
-    public LessonPage(WebDriver driver) {
-        super(driver);
+    @Inject
+    public LessonPage(GuiceScoped guiceScoped) {
+        super(guiceScoped);
     }
 
     public abstract boolean pageOpened();

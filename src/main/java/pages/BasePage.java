@@ -1,15 +1,17 @@
 package pages;
 
 import annotations.UrlPath;
+import com.google.inject.Inject;
 import common.CommonActions;
-import org.openqa.selenium.WebDriver;
+import common.GuiceScoped;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 public abstract class BasePage<T> extends CommonActions {
 
-    public BasePage(WebDriver driver) {
-        super(driver);
+    @Inject
+    public BasePage(GuiceScoped guiceScoped) {
+        super(guiceScoped);
     }
 
     private String getBaseUrl() {
@@ -25,30 +27,13 @@ public abstract class BasePage<T> extends CommonActions {
         return "";
     }
 
+    public String getCurrentUrl() {
+        return guiceScoped.driver.getCurrentUrl();
+    }
+
     public T open() {
-        driver.get(getBaseUrl() + getUrlPath());
+        guiceScoped.driver.get(getBaseUrl() + getUrlPath());
 
-        return (T) page(getClass());
-    }
-
-    public <T> T page(Class<T> clazz) {
-        try {
-            Constructor<T> constructor = clazz.getConstructor(WebDriver.class);
-
-            return convertInstanceOfObject(constructor.newInstance(driver), clazz);
-
-        } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    private static <T> T convertInstanceOfObject(Object o, Class<T> clazz) {
-        try {
-            return clazz.cast(o);
-        } catch (ClassCastException e) {
-            return null;
-        }
+        return (T) this;
     }
 }

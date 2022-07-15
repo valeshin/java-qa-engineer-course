@@ -1,14 +1,16 @@
 package components;
 
+import com.google.inject.Inject;
 import common.CommonActions;
-import org.openqa.selenium.WebDriver;
+import common.GuiceScoped;
 
 public abstract class AbstractComponent extends CommonActions {
 
     //private final String parentSelector;
 
-    public AbstractComponent(WebDriver driver) {
-        super(driver);
+    @Inject
+    public AbstractComponent(GuiceScoped guiceScoped) {
+        super(guiceScoped);
     }
 
     //public AbstractComponent() {

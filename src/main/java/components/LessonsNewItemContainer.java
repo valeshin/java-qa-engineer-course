@@ -1,12 +1,15 @@
 package components;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import com.google.inject.Inject;
+import common.GuiceScoped;
+import org.junit.jupiter.api.Assumptions;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import pages.CoursePage;
-import pages.LessonPage;
-import pages.SpecializationPage;
+import pages.LessonPageFactory;
+import pages.lessons.LessonPage;
 import utils.DateUtil;
 import utils.RegexUtil;
 import java.util.List;
@@ -23,8 +26,9 @@ public class LessonsNewItemContainer extends AbstractComponent {
 
     private WebElement itemContainer;
 
-    public LessonsNewItemContainer(WebDriver driver) {
-        super(driver);
+    @Inject
+    public LessonsNewItemContainer(GuiceScoped guiceScoped) {
+        super(guiceScoped);
     }
 
     public WebElement getCourseByName(String courseName) {
@@ -32,6 +36,7 @@ public class LessonsNewItemContainer extends AbstractComponent {
                 .filter(item -> item.findElement(By.cssSelector(itemTitle)).getText().contains(courseName))
                 .findAny()
                 .orElse(null);
+        Assumptions.assumeTrue(itemContainer != null, "Курс с указанным наименованием не найден на странице");
         return itemContainer;
     }
 
@@ -66,8 +71,7 @@ public class LessonsNewItemContainer extends AbstractComponent {
         moveToElement(course);
         course.click();
 
-        CoursePage coursePage = new CoursePage(driver);
-        return coursePage.pageOpened() ? coursePage : new SpecializationPage(driver);
+        return new LessonPageFactory(guiceScoped).getPage();
     }
 
     public LessonPage goToCourseByName(String courseName) {

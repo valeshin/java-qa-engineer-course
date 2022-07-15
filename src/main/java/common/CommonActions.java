@@ -1,5 +1,7 @@
 package common;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -9,24 +11,25 @@ import waiters.StandardWaiter;
 
 public abstract class CommonActions {
 
-    protected WebDriver driver;
+    protected GuiceScoped guiceScoped;
     protected StandardWaiter standardWaiter;
 
-    public CommonActions(WebDriver driver) {
-        this.driver = driver;
-        PageFactory.initElements(driver, this);
+    public CommonActions(GuiceScoped guiceScoped) {
+        this.guiceScoped = guiceScoped;
+        PageFactory.initElements(guiceScoped.driver, this);
 
-        standardWaiter = new StandardWaiter(driver);
+        standardWaiter = new StandardWaiter(guiceScoped.driver);
     }
 
     public void scrollToElement(WebElement element) {
-        ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView();", element);
+        assertNotNull(element, "scrollIntoView невозможно выполнить, т.к. элемент отсутствует на странице");
+        ((JavascriptExecutor)guiceScoped.driver).executeScript("arguments[0].scrollIntoView();", element);
     }
 
     // Клик реализован отдельно, чтобы работала подсветка
     public void moveToElement(WebElement element) {
         scrollToElement(element);
-        Actions actions = new Actions(driver);
+        Actions actions = new Actions(guiceScoped.driver);
         actions.moveToElement(element).build().perform();
     }
 }

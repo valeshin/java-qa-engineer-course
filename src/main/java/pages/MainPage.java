@@ -2,11 +2,14 @@ package pages;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.google.inject.Inject;
+import common.GuiceScoped;
 import org.openqa.selenium.WebDriver;
 
 public class MainPage extends BasePage<MainPage> {
 
-    public MainPage(WebDriver driver) {
-        super(driver);
+    @Inject
+    public MainPage(GuiceScoped guiceScoped) {
+        super(guiceScoped);
     }
 }

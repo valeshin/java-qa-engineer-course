@@ -2,6 +2,7 @@ package components;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import common.GuiceScoped;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -20,8 +21,8 @@ public class HeaderMenu extends AbstractComponent {
     @FindBy(css = component + " .header2-menu__item_dropdown")
     private List<WebElement> dropdownItems;
 
-    public HeaderMenu(WebDriver driver) {
-        super(driver);
+    public HeaderMenu(GuiceScoped guiceScoped) {
+        super(guiceScoped);
     }
 
     public void clickMenuItemCourses() {
