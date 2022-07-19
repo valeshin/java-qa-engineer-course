@@ -1,15 +1,20 @@
 package components;
 
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+
+import listeners.MouseListener;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.opentest4j.TestAbortedException;
 import pages.CoursePage;
 import pages.LessonPage;
 import pages.SpecializationPage;
 import utils.DateUtil;
 import utils.RegexUtil;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class LessonsNewItemContainer extends AbstractComponent {
@@ -32,6 +37,12 @@ public class LessonsNewItemContainer extends AbstractComponent {
                 .filter(item -> item.findElement(By.cssSelector(itemTitle)).getText().contains(courseName))
                 .findAny()
                 .orElse(null);
+        try {
+            assumeTrue(itemContainer != null, String.format("Test skipped: Курс %s не найден на странице", courseName));
+        } catch (TestAbortedException ex) {
+            Logger.getLogger(LessonsNewItemContainer.class.getName()).info(ex.getMessage());
+            throw ex;
+        }
         return itemContainer;
     }
 

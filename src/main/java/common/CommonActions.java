@@ -1,5 +1,7 @@
 package common;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -20,6 +22,7 @@ public abstract class CommonActions {
     }
 
     public void scrollToElement(WebElement element) {
+        assertNotNull(element, "scrollIntoView невозможно выполнить, т.к. элемент отсутствует на странице");
         ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView();", element);
     }
 
