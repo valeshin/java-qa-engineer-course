@@ -2,17 +2,13 @@ package components;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import annotations.Component;
 import com.google.inject.Inject;
 import common.GuiceScoped;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
+import exceptions.ComponentLocatorException;
 
+@Component(".container-lessons")
 public class LessonsContainer extends AbstractComponent {
-
-    private final String component = ".container-lessons";
-
-    @FindBy(css = component)
-    private WebElement lessonsContainer;
 
     @Inject
     public LessonsContainer(GuiceScoped guiceScoped) {
@@ -23,8 +19,8 @@ public class LessonsContainer extends AbstractComponent {
         return new LessonsNewItemContainer(guiceScoped);
     }
 
-    public LessonsContainer shouldBeVisible() {
-        assertTrue(standardWaiter.waitForElementVisible(lessonsContainer), "Список курсов не отображается");
+    public LessonsContainer shouldBeVisible() throws ComponentLocatorException {
+        assertTrue(standardWaiter.waitForElementVisible(getComponentEntity()), "Список курсов не отображается");
 
         return this;
     }

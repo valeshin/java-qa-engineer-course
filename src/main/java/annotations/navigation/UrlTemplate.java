@@ -1,4 +1,4 @@
-package annotations;
+package annotations.navigation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,6 +7,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface UrlPath {
-    String value();
+public @interface UrlTemplate {
+    String name();
+    String template();
 }

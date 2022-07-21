@@ -1,30 +1,26 @@
 package components;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
+import annotations.Component;
 import com.google.inject.Inject;
 import common.GuiceScoped;
-import org.junit.jupiter.api.Assumptions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
+import org.opentest4j.TestAbortedException;
 import pages.LessonPageFactory;
 import pages.lessons.LessonPage;
 import utils.DateUtil;
 import utils.RegexUtil;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+@Component(".lessons__new-item-container")
 public class LessonsNewItemContainer extends AbstractComponent {
 
-    private final String component = ".lessons__new-item-container";
     private final String itemTitle = ".lessons__new-item-title";
     private final String itemBottom = ".lessons__new-item-bottom";
-
-    @FindBy(css = component)
-    private List<WebElement> itemContainers;
-
-    private WebElement itemContainer;
 
     @Inject
     public LessonsNewItemContainer(GuiceScoped guiceScoped) {
@@ -32,16 +28,21 @@ public class LessonsNewItemContainer extends AbstractComponent {
     }
 
     public WebElement getCourseByName(String courseName) {
-        itemContainer = itemContainers.stream()
+        WebElement itemContainer = getComponentEntities().stream()
                 .filter(item -> item.findElement(By.cssSelector(itemTitle)).getText().contains(courseName))
                 .findAny()
                 .orElse(null);
-        Assumptions.assumeTrue(itemContainer != null, "Курс с указанным наименованием не найден на странице");
+        try {
+            assumeTrue(itemContainer != null, String.format("Test skipped: Курс %s не найден на странице", courseName));
+        } catch (TestAbortedException ex) {
+            Logger.getLogger(LessonsNewItemContainer.class.getName()).info(ex.getMessage());
+            throw ex;
+        }
         return itemContainer;
     }
 
     public List<WebElement> getCoursesByKeyword(String keyword) {
-        return itemContainers.stream()
+        return getComponentEntities().stream()
                 .filter(item -> item.findElement(By.cssSelector(itemTitle)).getText().contains(keyword))
                 .collect(Collectors.toList());
     }
@@ -52,19 +53,17 @@ public class LessonsNewItemContainer extends AbstractComponent {
     }
 
     public WebElement getEarliestCourse() {
-        itemContainer = itemContainers.stream()
+        return getComponentEntities().stream()
                 .filter(item -> !getCourseDate(item).isEmpty())
                 .reduce((item1, item2) -> !DateUtil.compareCourseDate(getCourseDate(item1), getCourseDate(item2)) ? item1 : item2)
                 .orElse(null);
-        return itemContainer;
     }
 
     public WebElement getLatestCourse() {
-        itemContainer = itemContainers.stream()
+        return getComponentEntities().stream()
                 .filter(item -> !getCourseDate(item).isEmpty())
                 .reduce((item1, item2) -> DateUtil.compareCourseDate(getCourseDate(item1), getCourseDate(item2)) ? item1 : item2)
                 .orElse(null);
-        return itemContainer;
     }
 
     public LessonPage goToCourse(WebElement course) {

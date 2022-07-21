@@ -1,13 +1,10 @@
 package components.popups;
 
-import com.google.inject.Inject;
-import common.CommonActions;
 import common.GuiceScoped;
-import org.openqa.selenium.WebDriver;
+import components.AbstractComponent;
 
-public abstract class AbsPopup extends CommonActions {
+public abstract class AbsPopup extends AbstractComponent {
 
-    @Inject
     public AbsPopup(GuiceScoped guiceScoped) {
         super(guiceScoped);
     }

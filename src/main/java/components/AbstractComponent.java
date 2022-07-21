@@ -1,29 +1,81 @@
 package components;
 
-import com.google.inject.Inject;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import annotations.Component;
 import common.CommonActions;
 import common.GuiceScoped;
+import exceptions.ComponentLocatorException;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import java.util.List;
 
 public abstract class AbstractComponent extends CommonActions {
 
-    //private final String parentSelector;
+    protected String componentLocator;
 
-    @Inject
     public AbstractComponent(GuiceScoped guiceScoped) {
         super(guiceScoped);
+        try {
+            validateComponent();
+        } catch (ComponentLocatorException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    //public AbstractComponent() {
-    //    this.parentSelector = "";
-    //}
+    private By getComponentLocator() throws ComponentLocatorException {
+        Component component = getClass().getAnnotation(Component.class);
+        if (component != null) {
+            componentLocator = component.value();
+            return locatorAnalyzer(component.value());
+        }
 
-    //public AbstractComponent(String parentSelector) {
-    //    this.parentSelector = parentSelector;
-    //}
+        throw new ComponentLocatorException(getClass().getName());
+    }
 
-    //public final String getFullSelector(String selector) {
-    //    return this.parentSelector + " " + selector;
-    //}
+    protected WebElement getElement(String elementLocator) {
+        try {
+            return getComponentEntity().findElement(locatorAnalyzer(elementLocator));
+        } catch (ComponentLocatorException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-    //public abstract String getComponentSelector();
+    protected List<WebElement> getElements(String elementLocator) {
+        try {
+            return getComponentEntity().findElements(locatorAnalyzer(elementLocator));
+        } catch (ComponentLocatorException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    public WebElement getComponentEntity() throws ComponentLocatorException {
+        return guiceScoped.driver.findElement(getComponentLocator());
+    }
+
+    public List<WebElement> getComponentEntities() {
+        try {
+            return guiceScoped.driver.findElements(getComponentLocator());
+        } catch (ComponentLocatorException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void validateComponent() throws ComponentLocatorException {
+        assertTrue(
+                standardWaiter.waitForElementVisible(getComponentEntity()),
+                "Компонент " + getClass().getName() + " отсутствует на странице"
+        );
+    }
+
+    private By locatorAnalyzer(String locator) {
+        if (locator.startsWith("/")) {
+            return By.xpath(locator);
+        }
+        return By.cssSelector(locator);
+    }
 }
