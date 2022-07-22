@@ -14,6 +14,8 @@ public abstract class BasePage<T> extends CommonActions {
         super(guiceScoped);
     }
 
+    public abstract void pageOpened();
+
     private String getBaseUrl() {
         return System.getProperty("webdriver.base.url");
     }

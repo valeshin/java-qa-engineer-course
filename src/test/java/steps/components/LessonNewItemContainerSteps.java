@@ -18,7 +18,7 @@ public class LessonNewItemContainerSteps {
             courses = lessonsNewItemContainer.getCoursesAfterDate(date);
         }
         if (!courses.isEmpty()) {
-            lessonsNewItemContainer.printCoursesInfo(courses);
+            lessonsNewItemContainer.printStartDateInfo(courses);
         } else {
             System.out.println("Курсов, начинающихся " + date + " или позже, нет на странице");
         }

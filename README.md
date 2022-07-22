@@ -10,9 +10,5 @@ ___
 &nbsp;
 ### Запуск тестов:
 * `mvn clean test` - запустить все тесты
-* `mvn clean test -Dbrowser=browsername` - запуск тестов на конкретном браузере поддержаны браузеры:
-  - chrome (значение по умолчанию);
-  - firefox;
-  - opera;
-* `mvn clean test -Dtest=TestClassName` - запуск конкретного тестового класса
-* `mvn clean test -Dtest=TestClassName#testName` - запуск конкретного теста
+* Для запуска тестов на конкретном браузере необходимо указать браузер в feature-файлах в шаге 'Пусть Пользователь открывает браузер "name"'
+* `mvn clean test -Dcucumber.filter.tags="@expensiveCourse"` - запуск тестов по тегу, тег указан в feature-файлах

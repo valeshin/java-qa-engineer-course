@@ -1,7 +1,6 @@
 package pages.lessons;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.google.inject.Inject;
 import common.GuiceScoped;
@@ -17,8 +16,11 @@ public class SpecializationPage extends LessonPage {
         super(guiceScoped);
     }
 
-    public boolean pageOpened() {
-        return !guiceScoped.driver.findElements(By.cssSelector(pageTitle)).isEmpty();
+    public void pageOpened() {
+        assertFalse(
+                guiceScoped.driver.findElements(By.cssSelector(pageTitle)).isEmpty(),
+                "Страница специализации не открылась"
+        );
     }
 
     public void pageTitleShouldBe(String expectedTile) {

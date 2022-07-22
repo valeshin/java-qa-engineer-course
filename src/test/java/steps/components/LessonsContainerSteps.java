@@ -15,6 +15,16 @@ public class LessonsContainerSteps {
         lessonsContainer.shouldBeVisible().getLessonsNewItemContainer().goToCourseByName(courseName);
     }
 
+    @Если("Открыть страницу самого дорогого курса и вывести информацию о нем в консоль")
+    public void openTheMostExpensivePrepCourse() throws ComponentLocatorException {
+        lessonsContainer.shouldBeVisible().getLessonsNewItemContainer().goToTheMostExpensivePrepCourse();
+    }
+
+    @Если("Открыть страницу самого дешевого курса и вывести информацию о нем в консоль")
+    public void openTheMostCheapPrepCourse() throws ComponentLocatorException {
+        lessonsContainer.shouldBeVisible().getLessonsNewItemContainer().goToTheMostCheapPrepCourse();
+    }
+
     @Если("Список курсов отображается на странице")
     public void lessonsContainerShouldBeVisible() throws ComponentLocatorException {
         lessonsContainer.shouldBeVisible();

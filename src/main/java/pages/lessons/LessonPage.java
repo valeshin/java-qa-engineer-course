@@ -11,8 +11,6 @@ public abstract class LessonPage extends BasePage<LessonPage> {
         super(guiceScoped);
     }
 
-    public abstract boolean pageOpened();
-
     public abstract void pageTitleShouldBe(String expectedTile);
 
     public abstract void startDateShouldBe(String expectedDate);

@@ -9,9 +9,11 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.opentest4j.TestAbortedException;
 import pages.LessonPageFactory;
+import pages.lessons.PrepCoursePage;
 import pages.lessons.LessonPage;
 import utils.DateUtil;
 import utils.RegexUtil;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -21,6 +23,7 @@ public class LessonsNewItemContainer extends AbstractComponent {
 
     private final String itemTitle = ".lessons__new-item-title";
     private final String itemBottom = ".lessons__new-item-bottom";
+    private final String itemPrice = ".lessons__new-item-price";
 
     @Inject
     public LessonsNewItemContainer(GuiceScoped guiceScoped) {
@@ -55,9 +58,19 @@ public class LessonsNewItemContainer extends AbstractComponent {
                 .collect(Collectors.toList());
     }
 
-    public void printCoursesInfo(List<WebElement> itemsList) {
+    public void printStartDateInfo(List<WebElement> itemsList) {
         itemsList.forEach(item -> System.out.println(
                 String.format("Курс '%s'. Начало курса: %s", item.findElement(By.cssSelector(itemTitle)).getText(), getCourseDate(item)))
+        );
+    }
+
+    public void printPriceInfo(WebElement item) {
+        System.out.println(
+                String.format(
+                        "Стоимость курса '%s' - %s",
+                        item.findElement(By.cssSelector(itemTitle)).getText(),
+                        item.findElement(By.cssSelector(itemPrice)).getText()
+                )
         );
     }
 
@@ -72,6 +85,11 @@ public class LessonsNewItemContainer extends AbstractComponent {
         return RegexUtil.getSubString(bottomText, "\\d{1,2}\\s[а-яА-я]+");
     }
 
+    public int getCoursePrice(WebElement itemContainer) {
+        String price = itemContainer.findElement(By.cssSelector(itemPrice)).getText();
+        return Integer.parseInt(RegexUtil.getSubString(price, "\\d+"));
+    }
+
     public WebElement getEarliestCourse() {
         return getComponentEntities().stream()
                 .filter(item -> !getCourseDate(item).isEmpty())
@@ -83,6 +101,18 @@ public class LessonsNewItemContainer extends AbstractComponent {
         return getComponentEntities().stream()
                 .filter(item -> !getCourseDate(item).isEmpty())
                 .reduce((item1, item2) -> DateUtil.compareCourseDate(getCourseDate(item1), getCourseDate(item2)) >= 0 ? item1 : item2)
+                .orElse(null);
+    }
+
+    public WebElement getTheMostExpensivePrepCourse() {
+        return getComponentEntities().stream()
+                .max(Comparator.comparingInt(this::getCoursePrice))
+                .orElse(null);
+    }
+
+    public WebElement getTheMostCheapPrepCourse() {
+        return getComponentEntities().stream()
+                .min(Comparator.comparingInt(this::getCoursePrice))
                 .orElse(null);
     }
 
@@ -106,5 +136,17 @@ public class LessonsNewItemContainer extends AbstractComponent {
     public LessonPage goToLatestCourse() {
         WebElement latestCourse = getLatestCourse();
         return goToCourse(latestCourse);
+    }
+
+    public PrepCoursePage goToTheMostExpensivePrepCourse() {
+        WebElement course = getTheMostExpensivePrepCourse();
+        printPriceInfo(course);
+        return (PrepCoursePage) goToCourse(course);
+    }
+
+    public PrepCoursePage goToTheMostCheapPrepCourse() {
+        WebElement course = getTheMostCheapPrepCourse();
+        printPriceInfo(course);
+        return (PrepCoursePage) goToCourse(course);
     }
 }
