@@ -14,4 +14,9 @@ public class LessonsContainerSteps {
     public void goToCourseName(String courseName) throws ComponentLocatorException {
         lessonsContainer.shouldBeVisible().getLessonsNewItemContainer().goToCourseByName(courseName);
     }
+
+    @Если("Список курсов отображается на странице")
+    public void lessonsContainerShouldBeVisible() throws ComponentLocatorException {
+        lessonsContainer.shouldBeVisible();
+    }
 }

@@ -41,6 +41,26 @@ public class LessonsNewItemContainer extends AbstractComponent {
         return itemContainer;
     }
 
+    public List<WebElement> getCoursesByDate(String date) {
+        return getComponentEntities().stream()
+                .filter(item -> !getCourseDate(item).isEmpty())
+                .filter(item -> DateUtil.compareCourseDate(getCourseDate(item), date) == 0)
+                .collect(Collectors.toList());
+    }
+
+    public List<WebElement> getCoursesAfterDate(String date) {
+        return getComponentEntities().stream()
+                .filter(item -> !getCourseDate(item).isEmpty())
+                .filter(item -> DateUtil.compareCourseDate(getCourseDate(item), date) > 0)
+                .collect(Collectors.toList());
+    }
+
+    public void printCoursesInfo(List<WebElement> itemsList) {
+        itemsList.forEach(item -> System.out.println(
+                String.format("Курс '%s'. Начало курса: %s", item.findElement(By.cssSelector(itemTitle)).getText(), getCourseDate(item)))
+        );
+    }
+
     public List<WebElement> getCoursesByKeyword(String keyword) {
         return getComponentEntities().stream()
                 .filter(item -> item.findElement(By.cssSelector(itemTitle)).getText().contains(keyword))
@@ -55,14 +75,14 @@ public class LessonsNewItemContainer extends AbstractComponent {
     public WebElement getEarliestCourse() {
         return getComponentEntities().stream()
                 .filter(item -> !getCourseDate(item).isEmpty())
-                .reduce((item1, item2) -> !DateUtil.compareCourseDate(getCourseDate(item1), getCourseDate(item2)) ? item1 : item2)
+                .reduce((item1, item2) -> DateUtil.compareCourseDate(getCourseDate(item1), getCourseDate(item2)) <= 0 ? item1 : item2)
                 .orElse(null);
     }
 
     public WebElement getLatestCourse() {
         return getComponentEntities().stream()
                 .filter(item -> !getCourseDate(item).isEmpty())
-                .reduce((item1, item2) -> DateUtil.compareCourseDate(getCourseDate(item1), getCourseDate(item2)) ? item1 : item2)
+                .reduce((item1, item2) -> DateUtil.compareCourseDate(getCourseDate(item1), getCourseDate(item2)) >= 0 ? item1 : item2)
                 .orElse(null);
     }
 

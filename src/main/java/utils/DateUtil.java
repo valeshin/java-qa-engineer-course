@@ -1,43 +1,38 @@
 package utils;
 
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.format.TextStyle;
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class DateUtil {
 
-    public static ArrayList<String> getMonthsArray() {
-        Month previousMonth = LocalDateTime.now().getMonth().minus(1);
-        ArrayList<String> months = new ArrayList<>();
-        for (int i = 0; i < 12; i++) {
-            months.add(previousMonth.getDisplayName(TextStyle.FULL, new Locale("ru")));
-            previousMonth = previousMonth.plus(1);
-        }
-        return months;
+    /**
+     * Метод парсинга даты начала курса
+     * учитывает отображение уже стартовавших курсов
+     * добавлена подстраховки при сравнении дат в конце года
+     *
+     * @param startDate дата начала курса
+     * @return date дата начала курса преобразованная в LocalDate
+     */
+    public static LocalDate parseStartDate(String startDate) {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("d MMMM yyyy", new Locale("ru"));
+        LocalDate date = LocalDate.parse(startDate + " " + LocalDate.now().getYear(), dtf);
+        return date.compareTo(LocalDate.now().minusMonths(1)) >= 0 ? date : date.plusYears(1);
     }
 
-    public static boolean compareCourseDate(String date1, String date2) {
-        int day1 = Integer.parseInt(date1.split(" ")[0]);
-        String month1 = date1.split(" ")[1];
+    /**
+     * Метод сравнения дат начала курсов
+     * в случае равенства возвращается рандомный boolean для рандомизации выбора курса
+     *
+     * @param startDate1 дата начала первого сравниваемого курса
+     * @param startDate2 дата начала второго сравниваемого курса
+     * @return boolean
+     */
+    public static int compareCourseDate(String startDate1, String startDate2) {
+        LocalDate date1 = parseStartDate(startDate1);
+        LocalDate date2 = parseStartDate(startDate2);
 
-        int day2 = Integer.parseInt(date2.split(" ")[0]);
-        String month2 = date2.split(" ")[1];
-
-        ArrayList<String> months = getMonthsArray();
-
-        if (months.indexOf(month1) > months.indexOf(month2)) {
-            return true;
-        } else if (months.indexOf(month1) < months.indexOf(month2)) {
-            return false;
-        } else if (day1 > day2) {
-            return true;
-        } else if (day1 < day2) {
-            return false;
-        } else {
-            return ThreadLocalRandom.current().nextBoolean();
-        }
+        return date1.compareTo(date2);
     }
 }
