@@ -2,11 +2,10 @@ package components;
 
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
-import listeners.MouseListener;
+import annotations.Component;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 import org.opentest4j.TestAbortedException;
 import pages.CoursePage;
 import pages.LessonPage;
@@ -17,23 +16,18 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+@Component(".lessons__new-item-container")
 public class LessonsNewItemContainer extends AbstractComponent {
 
-    private final String component = ".lessons__new-item-container";
     private final String itemTitle = ".lessons__new-item-title";
     private final String itemBottom = ".lessons__new-item-bottom";
-
-    @FindBy(css = component)
-    private List<WebElement> itemContainers;
-
-    private WebElement itemContainer;
 
     public LessonsNewItemContainer(WebDriver driver) {
         super(driver);
     }
 
     public WebElement getCourseByName(String courseName) {
-        itemContainer = itemContainers.stream()
+        WebElement itemContainer = getComponentEntities().stream()
                 .filter(item -> item.findElement(By.cssSelector(itemTitle)).getText().contains(courseName))
                 .findAny()
                 .orElse(null);
@@ -47,7 +41,7 @@ public class LessonsNewItemContainer extends AbstractComponent {
     }
 
     public List<WebElement> getCoursesByKeyword(String keyword) {
-        return itemContainers.stream()
+        return getComponentEntities().stream()
                 .filter(item -> item.findElement(By.cssSelector(itemTitle)).getText().contains(keyword))
                 .collect(Collectors.toList());
     }
@@ -58,19 +52,17 @@ public class LessonsNewItemContainer extends AbstractComponent {
     }
 
     public WebElement getEarliestCourse() {
-        itemContainer = itemContainers.stream()
+        return getComponentEntities().stream()
                 .filter(item -> !getCourseDate(item).isEmpty())
                 .reduce((item1, item2) -> !DateUtil.compareCourseDate(getCourseDate(item1), getCourseDate(item2)) ? item1 : item2)
                 .orElse(null);
-        return itemContainer;
     }
 
     public WebElement getLatestCourse() {
-        itemContainer = itemContainers.stream()
+        return getComponentEntities().stream()
                 .filter(item -> !getCourseDate(item).isEmpty())
                 .reduce((item1, item2) -> DateUtil.compareCourseDate(getCourseDate(item1), getCourseDate(item2)) ? item1 : item2)
                 .orElse(null);
-        return itemContainer;
     }
 
     public LessonPage goToCourse(WebElement course) {

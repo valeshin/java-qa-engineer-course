@@ -3,6 +3,7 @@ package mainpage;
 import components.HeaderMenu;
 import components.LessonsContainer;
 import components.LessonsNewItemContainer;
+import exceptions.ComponentLocatorException;
 import fixtures.TestCustomizer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -13,7 +14,7 @@ import pages.MainPage;
 public class MainCoursesTest extends TestCustomizer {
 
     @Test
-    public void clickHighlightDemo() {
+    public void clickHighlightDemo() throws ComponentLocatorException {
         new MainPage(driver).open();
 
         new HeaderMenu(driver).clickAllDropdownItems();

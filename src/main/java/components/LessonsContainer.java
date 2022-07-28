@@ -2,16 +2,12 @@ package components;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import annotations.Component;
+import exceptions.ComponentLocatorException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 
+@Component(".container-lessons")
 public class LessonsContainer extends AbstractComponent {
-
-    private final String component = ".container-lessons";
-
-    @FindBy(css = component)
-    private WebElement lessonsContainer;
 
     public LessonsContainer(WebDriver driver) {
         super(driver);
@@ -22,7 +18,11 @@ public class LessonsContainer extends AbstractComponent {
     }
 
     public LessonsContainer shouldBeVisible() {
-        assertTrue(standardWaiter.waitForElementVisible(lessonsContainer), "Список курсов не отображается");
+        try {
+            assertTrue(standardWaiter.waitForElementVisible(getComponentEntity()), "Список курсов не отображается");
+        } catch (ComponentLocatorException e) {
+            System.out.println(e.getMessage());
+        }
 
         return this;
     }
