@@ -11,9 +11,9 @@ import org.openqa.selenium.WebElement;
 @Component("//div[contains(@class, 'header2-menu_main')]")
 public class HeaderMenu extends AbstractComponent {
 
-    private final String mainMenuItem = "//div[./p[contains(text(), '%s')]]";
+    private final String mainMenuItem = ".//div[./p[contains(text(), '%s')]]";
     private final String mainMenuItemCourses = String.format(mainMenuItem, "Курсы");
-    private final String dropdownItems = "//div[contains(@class, 'header2-menu__item_dropdown')]";
+    private final String dropdownItems = ".//div[contains(@class, 'header2-menu__item_dropdown')]";
 
     @Inject
     public HeaderMenu(GuiceScoped guiceScoped) {

@@ -73,7 +73,7 @@ public abstract class AbstractComponent extends CommonActions {
     }
 
     private By locatorAnalyzer(String locator) {
-        if (locator.startsWith("/")) {
+        if (locator.startsWith("/") || locator.startsWith("./")) {
             return By.xpath(locator);
         }
         return By.cssSelector(locator);
