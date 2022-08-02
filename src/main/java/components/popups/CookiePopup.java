@@ -2,9 +2,6 @@ package components.popups;
 
 import annotations.Component;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
-import java.util.function.Consumer;
 
 @Component("div[class=\"cookies\"]")
 public class CookiePopup extends AbsPopup {
@@ -15,5 +12,7 @@ public class CookiePopup extends AbsPopup {
         super(driver);
     }
 
-    public Consumer<String> acceptCookie = acceptButton -> getElement(acceptButton).click();
+    public void acceptCookie() {
+        getElement(acceptButton).click();
+    }
 }

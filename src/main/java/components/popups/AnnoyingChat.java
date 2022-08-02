@@ -2,7 +2,6 @@ package components.popups;
 
 import annotations.Component;
 import org.openqa.selenium.WebDriver;
-import java.util.function.Consumer;
 
 @Component("jdiv #jcont")
 public class AnnoyingChat extends AbsPopup {
@@ -13,5 +12,7 @@ public class AnnoyingChat extends AbsPopup {
         super(driver);
     }
 
-    public Consumer<String> closeChat = closeButton -> getElement(closeButton).click();
+    public void closeChat() {
+        getElement(closeButton).click();
+    }
 }
