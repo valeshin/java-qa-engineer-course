@@ -17,14 +17,13 @@
         <selenium.java.version>3.141.59</selenium.java.version>
         <junit.version>5.8.1</junit.version>
 
-        <forkCount>1</forkCount>
-        <reuseForks>true</reuseForks>
-        <parallel>all</parallel>
-        <perCoreThreadCount>false</perCoreThreadCount>
-        <useUnlimitedThreads>true</useUnlimitedThreads>
-        <thread.count>32</thread.count>
+        <parallel>true</parallel>
+        <thread.count>3</thread.count>
 
         <browser>chrome</browser>
+        <browser.version>104.0</browser.version>
+        <webdriver.remote>true</webdriver.remote>
+        <webdriver.remote.url>http://localhost/wd/hub</webdriver.remote.url>
         <webdriver.base.url>https://otus.ru</webdriver.base.url>
         <webdriver.headless>false</webdriver.headless>
         <test.project.language>RU</test.project.language>
@@ -74,15 +73,19 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${surefire.plugin.version}</version>
                 <configuration>
-                    <forkCount>${forkCount}</forkCount>
-                    <reuseForks>${reuseForks}</reuseForks>
-                    <parallel>${parallel}</parallel>
-                    <perCoreThreadCount>${perCoreThreadCount}</perCoreThreadCount>
-                    <useUnlimitedThreads>${useUnlimitedThreads}</useUnlimitedThreads>
-                    <threadCountMethods>${thread.count}</threadCountMethods>
-
+                    <properties>
+                        <configurationParameters>
+                            junit.jupiter.execution.parallel.enabled = ${parallel}
+                            junit.jupiter.execution.parallel.mode.default = concurrent
+                            junit.jupiter.execution.parallel.config.strategy = fixed
+                            junit.jupiter.execution.parallel.config.fixed.parallelism = ${thread.count}
+                        </configurationParameters>
+                    </properties>
                     <systemPropertyVariables>
                         <browser>${browser}</browser>
+                        <browser.version>${browser.version}</browser.version>
+                        <webdriver.remote>${webdriver.remote}</webdriver.remote>
+                        <webdriver.remote.url>${webdriver.remote.url}</webdriver.remote.url>
                         <webdriver.timeouts.implicitlywait>${webdriver.timeouts.implicitlywait}
                         </webdriver.timeouts.implicitlywait>
                         <webdriver.base.url>${webdriver.base.url}</webdriver.base.url>

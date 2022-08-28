@@ -6,6 +6,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
+import java.net.MalformedURLException;
 import java.util.Locale;
 
 public abstract class TestCustomizer {
@@ -13,10 +14,14 @@ public abstract class TestCustomizer {
     protected EventFiringWebDriver driver;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws MalformedURLException {
         driver = new DriverFactory().getDriver();
-        driver.manage().window().setSize(new Dimension(1280, 1080));
-        driver.register(new MouseListener());
+        Dimension dimension = new Dimension(1280, 1080);
+        if (driver.getCapabilities().getVersion().contains("mobile")) {
+            dimension = new Dimension(390, 844);
+        }
+        driver.manage().window().setSize(dimension);
+        // driver.register(new MouseListener());
     }
 
     @AfterEach
