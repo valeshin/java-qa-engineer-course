@@ -5,9 +5,8 @@ import common.GuiceScoped;
 import driver.drivers.ChromeWebDriver;
 import driver.drivers.FirefoxWebDriver;
 import driver.drivers.OperaWebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
-import java.util.Locale;
+import java.net.MalformedURLException;
 
 public class DriverFactory {
 
@@ -18,7 +17,7 @@ public class DriverFactory {
         this.guiceScoped = guiceScoped;
     }
 
-    public EventFiringWebDriver getDriver() {
+    public EventFiringWebDriver getDriver() throws MalformedURLException {
         switch (guiceScoped.browserName) {
             case CHROME: return new EventFiringWebDriver(new ChromeWebDriver().newDriver());
             case FIREFOX: return new EventFiringWebDriver(new FirefoxWebDriver().newDriver());
